@@ -57,7 +57,7 @@
         var r, g, b, a;
 
         if (typeof(filter) !== "function") {
-            filter = function(r,g,b,a,x,y) {
+            filter = function(r,g,b,a) {
                 return [r,g,b,a];
             }
         }

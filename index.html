@@ -64,7 +64,9 @@
             var bb = document.getElementById("blue-1").value;
             var aa = document.getElementById("alpha-1").value;
 
-            var data = rgbEditor.filter(imageData, function(r, g, b, a) {
+            var start = new Date().getTime();
+            var copiedData = rgbEditor.copyImageData(imageData);
+            var data = rgbEditor.setFilter(copiedData, function(r, g, b, a, x, y) {
                 return [
                     r * (rr / 255),
                     g * (gg / 255),
@@ -72,6 +74,8 @@
                     a * (aa / 255)
                 ];
             });
+            var end = new Date().getTime();
+            console.log(end - start+" ms"); 
 
             var canvas = document.createElement("canvas");
             var ctx = canvas.getContext("2d");

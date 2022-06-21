@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rgb-editor</title>
+    <style>
+        .line{margin: 1rem 0; border-bottom: 1px solid;}
+    </style>
+</head>
+
+<body>
+    <h1>rgb-editor</h1>
+    
+    <input id="file-1" type="file">
+
+    <div class="line"></div>
+
+    <table>
+        <tr>
+            <th>Red:</th>
+            <td>
+                <input id="red-1" type="range" min="0" max="255" value="128">
+            </td>
+            <td id="red-2">128</td>
+        </tr>
+        <tr>
+            <th>Green:</th>
+            <td>
+                <input id="green-1" type="range" min="0" max="255" value="128">
+            </td>
+            <td id="green-2">128</td>
+        </tr>
+        <tr>
+            <th>Blue:</th>
+            <td>
+                <input id="blue-1" type="range" min="0" max="255" value="128">
+            </td>
+            <td id="blue-2">128</td>
+        </tr>
+        <tr>
+            <th>Alpha:</th>
+            <td>
+                <input id="alpha-1" type="range" min="0" max="255" value="255">
+            </td>
+            <td id="alpha-2">255</td>
+        </tr>
+    </table>
+
+    <div class="line"></div>
+
+    <img id="result-1" width="256" src="#" alt="">
+
+    <script src="dist/rgb-editor.js"></script>
+    <script>
+        var imageData;
+        function edit() {
+            if (!imageData) {
+                return false;
+            }
+            var rr = document.getElementById("red-1").value;
+            var gg = document.getElementById("green-1").value;
+            var bb = document.getElementById("blue-1").value;
+            var aa = document.getElementById("alpha-1").value;
+
+            var data = rgbEditor.filter(imageData, function(r, g, b, a) {
+                return [
+                    r * (rr / 255),
+                    g * (gg / 255),
+                    b * (bb / 255),
+                    a * (aa / 255)
+                ];
+            });
+
+            var canvas = document.createElement("canvas");
+            var ctx = canvas.getContext("2d");
+            canvas.width = data.width;
+            canvas.height = data.height;
+
+            ctx.putImageData(data, 0, 0);
+
+            var dataURL = canvas.toDataURL("image/jpeg");
+
+            document.getElementById("result-1").src = dataURL;
+        }
+
+        document.getElementById("file-1").addEventListener("change", function(e) {
+            var file = document.getElementById("file-1").files[0];
+            if (!file) {
+                return false;
+            }
+            var url = URL.createObjectURL(file);
+            rgbEditor.getImageData(url, function(err, res) {
+                if (err) {
+                    return false;
+                }
+                imageData = res;
+                document.getElementById("result-1").src = url;
+            });
+        });
+        document.getElementById("red-1").addEventListener("input", edit);
+        document.getElementById("green-1").addEventListener("input", edit);
+        document.getElementById("blue-1").addEventListener("input", edit);
+        document.getElementById("alpha-1").addEventListener("input", edit);
+        document.getElementById("red-1").addEventListener("change", function(e) {
+            var value = this.value;
+            document.getElementById("red-2").innerHTML = value;
+        });
+        document.getElementById("green-1").addEventListener("change", function(e) {
+            var value = this.value;
+            document.getElementById("green-2").innerHTML = value;
+        });
+        document.getElementById("blue-1").addEventListener("change", function(e) {
+            var value = this.value;
+            document.getElementById("blue-2").innerHTML = value;
+        });
+        document.getElementById("alpha-1").addEventListener("change", function(e) {
+            var value = this.value;
+            document.getElementById("alpha-2").innerHTML = value;
+        });
+    </script>
+</body>
+
+</html>

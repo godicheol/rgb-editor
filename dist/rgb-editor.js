@@ -87,7 +87,7 @@
     }
 
     exports.filter = function(data, filter) {
-        var i, j, imageWidth, imageHeight, imageData, res, idx;
+        var i, j, imageWidth, imageHeight, imageData, dataArray, res, idx;
         var r, g, b, a;
 
         if (typeof(filter) !== "function") {
@@ -96,8 +96,9 @@
             }
         }
 
+        dataArray = new Uint8ClampedArray(data.data);
         imageData = new ImageData(
-            new Uint8ClampedArray(data.data),
+            dataArray,
             data.width,
             data.height
         );
